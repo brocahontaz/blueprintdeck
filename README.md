@@ -70,6 +70,22 @@ Everything is static and client-side — no backend, no volumes, no environment
 variables. Assets are served with relative paths (`vite.config.ts` sets
 `base: './'`), so the container works behind any reverse proxy, from any path.
 
+## CI/CD
+
+Two GitHub Actions workflows (the CI workflow runs the checks; publishing is
+gated on it, see `.github/workflows/`):
+
+- **CI** — on every PR and push to `main`: Vitest, ESLint, Prettier, production
+  build, plus workflow linting (gitleaks, yamllint, actionlint, hadolint,
+  compose and nginx config validation).
+- **Publish Docker image** — on push to `main` and `v*` tags: re-runs the full
+  CI workflow first, then builds and pushes `ghcr.io/brocahontaz/blueprintdeck`
+  to GHCR. `main` pushes are tagged `latest`, `main`, and `sha-<short>`; `v*`
+  tags get `<semver>`, `<major>.<minor>`, and `sha-<short>`.
+
+The public host pulls updated images automatically via Watchtower — publishing
+an image is the whole deployment.
+
 ## Privacy
 
 Blueprint data never leaves your machine. Decoding, summarizing, footprint
