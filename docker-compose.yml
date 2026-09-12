@@ -1,0 +1,9 @@
+# Local build & run: docker compose up --build, then browse http://127.0.0.1:8080.
+
+services:
+  blueprintdeck:
+    build: .
+    image: blueprintdeck:local
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
